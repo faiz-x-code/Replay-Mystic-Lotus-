@@ -1,0 +1,24 @@
+# Mac OS metadata
+__MACOSX/
+.DS_Store
+
+# Node Dependencies
+node_modules/
+**/node_modules/
+
+# Production builds
+dist/
+**/dist/
+hostinger-deploy/
+*.zip
+
+# Secrets & Environment variables
+.env
+**/.env
+.env.local
+
+# Temporary / OS files
+Thumbs.db
+*.log
+data/uploads/
+*.tsbuildinfo

@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "buildCommand": "cd mystic-lotus-ai-studio && npm run build:vercel",
+  "outputDirectory": "mystic-lotus-ai-studio/frontend/dist",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/mystic-lotus-ai-studio/api/index.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

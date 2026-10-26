@@ -1350,7 +1350,7 @@ function jumpTo${pNum}(seconds) {
                     ) : ytTranscriptInfo ? (
                       <><Check size={14} color="#10B981" /> Official YouTube Transcript Loaded ({ytTranscriptInfo.totalCues.toLocaleString()} Cues Ready)</>
                     ) : (
-                      <><Sparkles size={13} /> Detect &amp; Fetch Official YouTube Transcript (Recommended)</>
+                      <><Sparkles size={13} /> Auto-Detect Official YouTube Captions</>
                     )}
                   </button>
 
@@ -1367,7 +1367,7 @@ function jumpTo${pNum}(seconds) {
                       alignItems: 'center',
                       justifyContent: 'space-between'
                     }}>
-                      <span>🟢 <strong>100% Video-Synced:</strong> 0 offset drift. Cues match YouTube player to the exact second.</span>
+                      <span>🟢 <strong>100% Video-Synced:</strong> Cues match YouTube player to the exact second.</span>
                       <label style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontWeight: 600 }}>
                         <input
                           type="checkbox"
@@ -1383,27 +1383,48 @@ function jumpTo${pNum}(seconds) {
                       marginTop: 8,
                       background: '#FFFBEB',
                       border: '1.5px solid #FCD34D',
-                      borderRadius: 10,
-                      padding: '10px 14px',
+                      borderRadius: 12,
+                      padding: '12px 14px',
                       fontSize: 12,
                       color: '#92400E',
                       lineHeight: 1.5
                     }}>
                       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                        <span style={{ fontSize: 16 }}>⚠️</span>
+                        <span style={{ fontSize: 16 }}>💡</span>
                         <div style={{ flex: 1 }}>
                           <strong style={{ color: '#78350F' }}>YouTube Captions Status:</strong>
-                          <p style={{ margin: '3px 0 6px 0', fontSize: 11.5 }}>
-                            {ytTranscriptNotice}
+                          <p style={{ margin: '3px 0 8px 0', fontSize: 11.5 }}>
+                            YouTube cloud scraper restriction. Choose one of two easy options:
                           </p>
-                          <div style={{
-                            background: '#FEF3C7',
-                            padding: '6px 10px',
-                            borderRadius: 6,
-                            border: '1px dashed #F59E0B',
-                            fontSize: 11.5
-                          }}>
-                            👉 <strong>No problem:</strong> You can upload your Zoom / Masterclass transcript file in <strong>Step 4</strong> below, paste captions directly, or click <strong>Generate</strong> to let AI create highlights from the masterclass title.
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                            <div style={{
+                              background: '#FEF3C7',
+                              padding: '8px 10px',
+                              borderRadius: 8,
+                              border: '1px dashed #F59E0B',
+                              fontSize: 11.5
+                            }}>
+                              <strong>Option 1 (Fastest):</strong> Click the purple <strong>Generate Replay Code</strong> button below — AI will create all highlights &amp; timestamps directly!
+                            </div>
+                            <div style={{
+                              background: '#F5F3FF',
+                              padding: '8px 10px',
+                              borderRadius: 8,
+                              border: '1px solid #DDD6FE',
+                              fontSize: 11.5,
+                              color: '#5B21B6'
+                            }}>
+                              <strong>Option 2:</strong> Upload Zoom transcript in <strong>Step 4</strong>, or{' '}
+                              <a
+                                href={youtubeUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                style={{ color: '#7C3AED', fontWeight: 700, textDecoration: 'underline' }}
+                              >
+                                open YouTube video
+                              </a>
+                              {' '}and copy captions into the box.
+                            </div>
                           </div>
                         </div>
                       </div>

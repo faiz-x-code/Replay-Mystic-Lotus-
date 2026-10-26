@@ -85,10 +85,30 @@ function parseTranscriptXml(xml: string): RawCue[] {
   return results;
 }
 
+async function fetchVisitorData(): Promise<string | null> {
+  try {
+    const res = await fetch('https://www.youtube.com/sw.js_data', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+      }
+    });
+    const text = await res.text();
+    const clean = text.replace(/^\)\]\}'\s*/, '');
+    const data = JSON.parse(clean);
+    const visitor = data?.[0]?.[2]?.[0]?.[0]?.[13];
+    if (typeof visitor === 'string' && visitor.length > 20) {
+      return visitor;
+    }
+  } catch {}
+  return null;
+}
+
 /**
  * Fetch raw caption cues directly using YouTube InnerTube API
  */
 async function fetchViaInnerTube(videoId: string): Promise<RawCue[] | null> {
+  const visitorData = await fetchVisitorData();
+
   const clients = [
     {
       name: 'ANDROID',
@@ -113,13 +133,15 @@ async function fetchViaInnerTube(videoId: string): Promise<RawCue[] | null> {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'User-Agent': client.ua
+          'User-Agent': client.ua,
+          ...(visitorData ? { 'X-Goog-Visitor-Id': visitorData } : {})
         },
         body: JSON.stringify({
           context: {
             client: {
               clientName: client.name,
               clientVersion: client.version,
+              ...(visitorData ? { visitorData } : {}),
               hl: 'en',
               gl: 'US'
             }
@@ -127,6 +149,7 @@ async function fetchViaInnerTube(videoId: string): Promise<RawCue[] | null> {
           videoId
         })
       });
+
 
       if (!resp.ok) continue;
       const data: any = await resp.json();

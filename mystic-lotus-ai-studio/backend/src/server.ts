@@ -42,12 +42,10 @@ app.use('/simple', simpleRouter);
 
 // Serve frontend static build if present (for production / Hostinger / unified hosting)
 const candidateStaticPaths = [
-  path.resolve(__dirname, '../../frontend/dist'),
-  path.resolve(__dirname, '../frontend/dist'),
+  path.resolve(process.cwd(), '../frontend/dist'),
   path.resolve(process.cwd(), 'frontend/dist'),
   path.resolve(process.cwd(), 'dist'),
   path.resolve(process.cwd(), 'public'),
-  path.resolve(__dirname, 'public')
 ];
 
 const frontendDistPath = candidateStaticPaths.find(p => fs.existsSync(path.join(p, 'index.html')));

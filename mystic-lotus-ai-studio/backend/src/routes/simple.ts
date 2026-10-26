@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 import { GoogleGenAI } from '@google/genai';
 import { parseTranscriptFile, parseVTT, parseTextLines, secondsToTimeString, timeStringToSeconds, ParsedSegment } from '../services/transcript/parser.js';
 import { extractYouTubeId, generateWordPressEmbedCode } from '../services/wordpress/template.js';
@@ -10,15 +11,24 @@ import { generateReplayEmailHtml, ReplayEmailData } from '../services/email/temp
 
 const router = express.Router();
 
-const uploadDir = path.resolve(process.cwd(), 'data/uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+const isServerless = Boolean(process.env.LAMBDA_TASK_ROOT || process.env.NETLIFY || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const uploadDir = isServerless
+  ? path.join(os.tmpdir(), 'ml_uploads')
+  : path.resolve(process.cwd(), 'data/uploads');
+
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn('Upload dir init notice:', err);
 }
 
 const upload = multer({
   dest: uploadDir,
   limits: { fileSize: 30 * 1024 * 1024 }
 });
+
 
 // Snap an AI-generated timestamp to the nearest transcript segment start within +/- 20s
 function snapTimestampToTranscript(predictedSec: number, segments: ParsedSegment[]): number {

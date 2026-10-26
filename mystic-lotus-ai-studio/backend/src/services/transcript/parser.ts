@@ -2,8 +2,19 @@ import fs from 'fs';
 import path from 'path';
 import mammoth from 'mammoth';
 import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const pdfParse: any = require('pdf-parse');
+
+let pdfParse: any = null;
+try {
+  const req = typeof require !== 'undefined'
+    ? require
+    : (typeof import.meta !== 'undefined' && typeof import.meta.url === 'string' ? createRequire(import.meta.url) : null);
+  if (req) {
+    pdfParse = req('pdf-parse');
+  }
+} catch (err) {
+  console.warn('pdf-parse dynamic load notice:', err);
+}
+
 
 export interface ParsedSegment {
   sequenceNumber: number;

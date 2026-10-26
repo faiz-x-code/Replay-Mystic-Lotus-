@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Production Builds
+dist/
+frontend/dist/
+backend/dist/
+hostinger-deploy/
+hostinger-deploy.zip
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.production
+backend/.env
+hostinger-deploy/.env
+
+# Temporary / OS files
+.DS_Store
+Thumbs.db
+data/uploads/
+*.log
+
+# TypeScript cache
+*.tsbuildinfo

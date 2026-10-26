@@ -31,7 +31,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Health check
-app.get('/api/health', (_req, res) => {
+app.get(['/api/health', '/health'], (_req, res) => {
   res.json({
     status: 'ok',
     service: 'mystic-lotus-replay-generator',
@@ -42,6 +42,8 @@ app.get('/api/health', (_req, res) => {
 
 // Replay Code Generator Route
 app.use('/api/simple', simpleRouter);
+app.use('/simple', simpleRouter);
+
 
 // Serve frontend static build if present (for production / Hostinger / unified hosting)
 const candidateStaticPaths = [
@@ -79,10 +81,18 @@ export default app;
 
 const port = Number(process.env.PORT || 4000);
 
-// Only start standalone HTTP listener if not running in serverless / test environments
-if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL && !process.env.NETLIFY) {
+// Only start standalone HTTP listener if not running in serverless / lambda / test environments
+const isServerless = Boolean(
+  process.env.VERCEL ||
+  process.env.NETLIFY ||
+  process.env.AWS_LAMBDA_FUNCTION_NAME ||
+  process.env.LAMBDA_TASK_ROOT
+);
+
+if (process.env.NODE_ENV !== 'test' && !isServerless) {
   app.listen(port, () => {
     console.log(`Mystic Lotus Replay Code Generator API listening on http://localhost:${port}`);
   });
 }
+
 
